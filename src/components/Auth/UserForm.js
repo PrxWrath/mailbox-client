@@ -179,7 +179,7 @@ const UserForm = () => {
                   <Form.Label className='mb-1'>Enter you registered email id</Form.Label> 
                   <Form.Control type='email' ref={emailRef}/>
                 </Form.Group>
-                {!loading?
+                {loading?
                   <Loader className='my-2'/>
                   :
                   <div className='my-2 w-100 text-center'>
