@@ -9,7 +9,7 @@ const Home = React.lazy(()=>import("./components/Home/Home"))
 const App = () => {
   const isLoggedIn = useSelector(state=>state.auth.isLoggedIn);
   return (
-    <div className={`app-interface bg-dark`}>
+    <div className={`app-interfac`}>
       <Header/>
       
       <Suspense fallback={<Loader/>}>

@@ -8,7 +8,7 @@ import Loader from '../Layout/Loader';
 const UserForm = () => {
 
   const [alert, setAlert] = useState(<></>);
-  const [login, setLogin] = useState(false);
+  const [login, setLogin] = useState(true);
   const [forgot, setForgot] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -148,14 +148,14 @@ const UserForm = () => {
               {!forgot?
               <>
                 <h3 className='mx-auto my-2 mb-3 w-50 border-bottom border-danger text-center'>{login?'Login':'Signup'}</h3>
-                <FloatingLabel controlId='email' className='mb-3' label='Your Email'>
+                <FloatingLabel controlId='email' className='mb-3 fw-bold' label='Your Email'>
                     <Form.Control type='email' ref={emailRef}/>
                 </FloatingLabel>
-                <FloatingLabel controlId='password' className='mb-3' label='Your Password'>
+                <FloatingLabel controlId='password' className='mb-3 fw-bold' label='Your Password'>
                     <Form.Control type='password' ref={passwordRef}/>
                 </FloatingLabel>
                 {!login&&
-                <FloatingLabel controlId='confirm' className='mb-3' label='Confirm Password'>
+                <FloatingLabel controlId='confirm' className='mb-3 fw-bold' label='Confirm Password'>
                     <Form.Control type='password' ref={confirmRef}/>
                 </FloatingLabel>
                 }
@@ -176,7 +176,7 @@ const UserForm = () => {
               <>
                 <h3 className='mx-auto my-2 mb-5 w-75 border-bottom border-danger text-center'>Forgot Password?</h3>
                 <Form.Group className='mb-5'>
-                  <Form.Label className='mb-1'>Enter you registered email id</Form.Label> 
+                  <Form.Label className='mb-1 fw-bold'>Enter you registered email id</Form.Label> 
                   <Form.Control type='email' ref={emailRef}/>
                 </Form.Group>
                 {loading?

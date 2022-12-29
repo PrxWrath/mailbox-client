@@ -13,7 +13,9 @@ const inboxSlice = createSlice({
             state.unread++;
         },
         decrementUnread(state){
-            state.unread--;
+            if(state.unread>0){
+                state.unread--;
+            }
         }, 
         clear(state){
             state.mails = [];

@@ -14,7 +14,7 @@ const Header = (props) => {
   
   return (
     <>
-      <Navbar className="fw-bold" expand="sm" variant="dark" bg="danger" fixed="top">
+      <Navbar className="fw-bold shadow" expand="sm" variant="dark" bg="danger" fixed="top">
         <Container>
             <Navbar.Brand href="/">MailBox.</Navbar.Brand>
             <Nav className="ms-auto">

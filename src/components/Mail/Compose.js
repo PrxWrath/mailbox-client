@@ -72,19 +72,19 @@ const Compose = () => {
 
   return (
     <div className='my-1'>
-        <h3 className='w-100 my-2 border-bottom text-danger'>Compose Mail</h3>
+        <h3 className='w-100 mb-4 border-bottom border-dark text-danger p-2'>Compose Mail</h3>
         {alert}
         <Form>
             <Form.Group as={Row} className='mb-3'>
                 <Form.Label className='fw-bold text-danger text-center' column xs lg='2'><h5>Send To:</h5></Form.Label>
                 <Col xs lg='6'>
-                    <Form.Control className='bg-dark border border-danger text-light' type='email' id='toEmail'ref={sendTo}/>
+                    <Form.Control className='border border-danger' type='email' id='toEmail'ref={sendTo}/>
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className='mb-3'>
                 <Form.Label className='fw-bold text-danger text-center' column xs lg='2'><h5>Subject:</h5></Form.Label>
                 <Col xs lg='6'>
-                    <Form.Control className='bg-dark border border-danger text-light' type='text' id='subject' ref={subject}/>
+                    <Form.Control className='border border-danger' type='text' id='subject' ref={subject}/>
                 </Col>
             </Form.Group>   
         </Form>
@@ -102,11 +102,11 @@ const Compose = () => {
                 editorState={editorState}
                 wrapperClassName='wrapperClassName w-75 mx-auto'
                 toolbarClassName='toolbarClassName bg-danger rounded p-1'
-                editorClassName='editorClassName text-light'
+                editorClassName='editorClassName'
                 onEditorStateChange={editorChangeHandler}
                 editorStyle={{height:'70vh'}}
                 toolbar={{
-                    options: ['inline','blockType', 'list', 'textAlign', 'history'],
+                    options: ['inline','blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'history'],
                     inline:{
                         options:['bold', 'italic', 'underline'],
                         className:'mx-2',
