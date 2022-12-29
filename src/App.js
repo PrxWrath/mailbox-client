@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { useSelector } from "react-redux";
-import { Redirect, Route, Switch} from "react-router-dom";
+import { Route, Switch} from "react-router-dom";
 import Header from "./components/Layout/Header";
 import Loader from "./components/Layout/Loader";
 
@@ -20,9 +20,6 @@ const App = () => {
           </Route>
           <Route exact path="/auth">
             <UserForm />
-          </Route>
-          <Route path='*'>
-            <Redirect to='/'/>
           </Route>
         </Switch>
       </Suspense>
