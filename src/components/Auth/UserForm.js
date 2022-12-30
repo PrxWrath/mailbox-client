@@ -55,7 +55,7 @@ const UserForm = () => {
             if(!res.ok){  
               throw new Error(data.error.errors[0].message)
             }else{
-              setAlert(<Alert variant='danger'>Your account has been created. Please login with new account :)</Alert>)
+              setAlert(<Alert variant='success'>Your account has been created. Please login with new account :)</Alert>)
               setTimeout(()=>{setAlert(<></>)}, 3000)
               console.log("User has successfully signed up")
             }
@@ -125,7 +125,7 @@ const UserForm = () => {
       if(!res.ok){
         throw new Error(data.error.errors[0].message)
       }else{
-        setAlert(<Alert variant='danger'>Password reset link sent to your email :)</Alert>)
+        setAlert(<Alert variant='success'>Password reset link sent to your email :)</Alert>)
         setTimeout(()=>{setAlert(<></>)}, 3000)
         emailRef.current.value = '';
       }

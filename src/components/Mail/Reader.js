@@ -3,11 +3,11 @@ import parse from 'html-react-parser'
 import { Button } from 'react-bootstrap'
 
 const Reader = (props) => {
-  const {mail, setShowMail} = props 
+  const {mail, setShowMail, inbox} = props 
   return (
     <>
         <h5 className='text-danger w-100 border-bottom border-dark p-2 mb-3 d-flex'>
-            From: {mail.from} 
+            {inbox?`From:${mail.from}`:`To:${mail.to}`} 
             <p className='text-secondary ms-auto'>{mail.at}</p>
         </h5>
         <div className='w-75 mx-auto h-75 shadow-lg border border-danger p-2'>

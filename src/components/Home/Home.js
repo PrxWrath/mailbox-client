@@ -3,21 +3,27 @@ import { Col, Container, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux';
 import { inboxActions } from '../../store/InboxReducer';
 import Compose from '../Mail/Compose';
-import Inbox from '../Mail/Inbox';
 import Menu from './Menu'
-
+const Inbox = React.lazy(()=>import("../Mail/Inbox"))
 const Home = () => {
   const [greet, setGreet] = useState(true);
   const [showCompose, setShowCompose] = useState(false);
   const [showSent, setShowSent] = useState(false);
   const [showInbox, setShowInbox] = useState(false);
+  let inbox = true;
   const email = useSelector(state=>state.auth.loginEmail);
   const dispatch = useDispatch();
   let countUnread = true;
 
-  const loadMails = useCallback(async(countUnread) => {
+  const loadMails = useCallback(async(countUnread, inbox) => {
     
-    const res = await fetch(`https://mailbox-client-d3ec8-default-rtdb.firebaseio.com/${email}Inbox.json`);
+    let res 
+    if(inbox){
+      res = await fetch(`https://mailbox-client-d3ec8-default-rtdb.firebaseio.com/${email}Inbox.json`);
+    }
+    else{
+      res = await fetch(`https://mailbox-client-d3ec8-default-rtdb.firebaseio.com/${email}Sent.json`) 
+    }
     const data = await res.json();
     if(res.ok){
       let mailData = Object.values(data).reverse();
@@ -35,8 +41,8 @@ const Home = () => {
   },[email, dispatch])
 
   useEffect(()=>{
-    loadMails(countUnread)
-  },[countUnread, loadMails])
+    loadMails(countUnread, inbox)
+  },[countUnread, inbox, loadMails])
 
   return (
     <Container fluid style={{paddingTop:'4rem'}} className='h-100'>
@@ -54,10 +60,10 @@ const Home = () => {
             <Compose/>
           }
           {showInbox&&
-            <Inbox loadMails = {loadMails}/>
+            <Inbox loadMails = {loadMails} inbox={inbox}/>
           }
           {showSent&&
-            <></>
+            <Inbox loadMails = {loadMails} inbox={!inbox}/>
           }
         </Col>
       </Row>

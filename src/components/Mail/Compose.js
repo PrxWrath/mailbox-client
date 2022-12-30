@@ -46,11 +46,13 @@ const Compose = () => {
             status: 'unread'
         }
         let receiver = sentMail.to.replace('@', '').replace('.', '');
+
         //create sent entry
         let sentRes = await fetch(`https://mailbox-client-d3ec8-default-rtdb.firebaseio.com/${email}Sent/mail${sentMail.id}.json`,{
             method:'PUT',
             body:JSON.stringify(sentMail),
         })
+        
         //create inbox entry
         let recRes = await fetch(`https://mailbox-client-d3ec8-default-rtdb.firebaseio.com/${receiver}Inbox/mail${recMail.id}.json`,{
             method:'PUT',
