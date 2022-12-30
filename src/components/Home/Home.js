@@ -20,7 +20,7 @@ const Home = () => {
     const res = await fetch(`https://mailbox-client-d3ec8-default-rtdb.firebaseio.com/${email}Inbox.json`);
     const data = await res.json();
     if(res.ok){
-      let mailData = Object.values(data);
+      let mailData = Object.values(data).reverse();
       if(countUnread){
         dispatch(inboxActions.clear())
         mailData.forEach(mail=>{
