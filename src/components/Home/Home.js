@@ -41,7 +41,12 @@ const Home = () => {
   },[email, dispatch])
 
   useEffect(()=>{
-    loadMails(countUnread, inbox)
+    let interval = setInterval(()=>{
+      console.log('Triggered')
+      loadMails(countUnread, inbox)
+    }, 2000)
+    return()=> clearInterval(interval);
+    
   },[countUnread, inbox, loadMails])
 
   return (
