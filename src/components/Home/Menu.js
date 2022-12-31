@@ -3,6 +3,7 @@ import { Button } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 
 const Menu = (props) => {
+  const email = useSelector(state=>state.auth.loginEmail)
   const unread = useSelector(state=>state.inbox.unread);
   const toggleCompose = () => {
     props.setGreet(false);
@@ -12,6 +13,7 @@ const Menu = (props) => {
   }
 
   const toggleInbox = () => {
+    props.setUrl(`https://mailbox-client-d3ec8-default-rtdb.firebaseio.com/${email}Inbox.json`)
     props.setGreet(false);
     props.setShowCompose(false);
     props.setShowSent(false);
@@ -19,6 +21,7 @@ const Menu = (props) => {
   }
   
   const toggleSent = () => {
+    props.setUrl(`https://mailbox-client-d3ec8-default-rtdb.firebaseio.com/${email}Sent.json`)
     props.setGreet(false);
     props.setShowCompose(false);
     props.setShowInbox(false);

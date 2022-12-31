@@ -1,59 +1,49 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, {useState, useCallback, useEffect } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux';
+import useFetch from '../../hooks/useFetch';
 import { inboxActions } from '../../store/InboxReducer';
 import Compose from '../Mail/Compose';
 import Menu from './Menu'
 const Inbox = React.lazy(()=>import("../Mail/Inbox"))
+
 const Home = () => {
   const [greet, setGreet] = useState(true);
   const [showCompose, setShowCompose] = useState(false);
   const [showSent, setShowSent] = useState(false);
   const [showInbox, setShowInbox] = useState(false);
-  let inbox = true;
   const email = useSelector(state=>state.auth.loginEmail);
+  const [url, setUrl] = useState(`https://mailbox-client-d3ec8-default-rtdb.firebaseio.com/${email}Inbox.json`);
   const dispatch = useDispatch();
-  let countUnread = true;
+  
 
-  const loadMails = useCallback(async(countUnread, inbox) => {
-    
-    let res 
-    if(inbox){
-      res = await fetch(`https://mailbox-client-d3ec8-default-rtdb.firebaseio.com/${email}Inbox.json`);
-    }
-    else{
-      res = await fetch(`https://mailbox-client-d3ec8-default-rtdb.firebaseio.com/${email}Sent.json`) 
-    }
-    const data = await res.json();
-    if(res.ok){
-      let mailData = Object.values(data).reverse();
-      if(countUnread){
+  const loadMails = useCallback((data) => {
+      if(data){
+        let mailData = Object.values(data).reverse();
         dispatch(inboxActions.clear())
         mailData.forEach(mail=>{
-          if(mail.status==='unread'){
-            dispatch(inboxActions.incrementUnread())
-          }
+            if(mail.status==='unread'){
+              dispatch(inboxActions.incrementUnread())
+            }
         })
+         dispatch(inboxActions.loadMails(mailData));
       }
-      dispatch(inboxActions.loadMails(mailData));
-      
-    }
-  },[email, dispatch])
+    },[dispatch])
 
+  let sendReq = useFetch({url:url}, loadMails)
+  
   useEffect(()=>{
     let interval = setInterval(()=>{
-      console.log('Triggered')
-      loadMails(countUnread, inbox)
+      sendReq()
     }, 2000)
-    return()=> clearInterval(interval);
-    
-  },[countUnread, inbox, loadMails])
-
+    return ()=>clearInterval(interval)
+  },[sendReq])
+  
   return (
     <Container fluid style={{paddingTop:'4rem'}} className='h-100'>
       <Row>
         <Col xs lg="3" style={{height:'100vh'}}>
-          <Menu setGreet = {setGreet} setShowCompose = {setShowCompose} setShowInbox = {setShowInbox} setShowSent = {setShowSent}/>
+          <Menu setUrl={setUrl} setGreet = {setGreet} setShowCompose = {setShowCompose} setShowInbox = {setShowInbox} setShowSent = {setShowSent}/>
         </Col>
         <Col xs lg="9" className='p-2' style={{height:'100vh'}}>
           {greet&&
@@ -65,10 +55,10 @@ const Home = () => {
             <Compose/>
           }
           {showInbox&&
-            <Inbox loadMails = {loadMails} inbox={inbox}/>
+            <Inbox loadMails = {loadMails} inbox={showInbox}/>
           }
           {showSent&&
-            <Inbox loadMails = {loadMails} inbox={!inbox}/>
+            <Inbox loadMails = {loadMails} inbox={showInbox}/>
           }
         </Col>
       </Row>

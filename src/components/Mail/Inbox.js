@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { ListGroup, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux'
 import { inboxActions } from '../../store/InboxReducer';
@@ -13,10 +13,7 @@ const Inbox = (props) => {
   const email = useSelector(state=>state.auth.loginEmail)
   const dispatch = useDispatch();
   
-  useEffect(()=>{
-    loadMails(false, inbox)
-  },[dispatch, loadMails, inbox])
-
+  
   const changeStatusHandler = async(mail) => {
     if(inbox){
         const readMail = {
@@ -33,7 +30,7 @@ const Inbox = (props) => {
         })
         if(res.ok){
             dispatch(inboxActions.decrementUnread())
-            loadMails(false, inbox);        
+            loadMails();        
         }
     }
   }
@@ -70,7 +67,7 @@ const Inbox = (props) => {
     }
 
     if(res.ok){
-        loadMails(false, inbox);
+        loadMails();
     }
   }
   
@@ -80,6 +77,7 @@ const Inbox = (props) => {
             <Reader mail={toRead} setShowMail={setShowReader} inbox={inbox}/>
             :
             <>
+            
                 <h3 className='w-100 mb-3 border-bottom border-dark text-danger p-1'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="mx-1 bi bi-envelope" viewBox="0 0 16 16">
                         <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
@@ -89,9 +87,8 @@ const Inbox = (props) => {
                 <ListGroup className='w-100 my-2 border border-dark rounded p-2 mh-75' style={{overflowY:'scroll', overflowX:'hidden'}}>
                     {mails.length&&mails.map(mail=>{
                         return(
-                            <div className='d-flex w-100'>
-                                <ListGroup.Item 
-                                    key={mail.id} 
+                            <div key={mail.id} className='d-flex w-100'>
+                                <ListGroup.Item  
                                     id={mail.id} 
                                     onClick={()=>{
                                         if(mail.status==='unread'){changeStatusHandler(mail)}

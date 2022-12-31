@@ -5,23 +5,41 @@ import draftToHtml from 'draftjs-to-html'
 import { Alert, Button, Col, Form, Row } from 'react-bootstrap'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { useSelector } from 'react-redux'
+import useFetch from '../../hooks/useFetch'
 
 const Compose = () => {
   const[editorState, setEditorState] = useState(EditorState.createEmpty());
   const [alert, setAlert] = useState(<></>);
   const [msgBody, setMsgBody] = useState('');
+  const [sentMail, setSentMail] = useState({});
+  const [recMail, setRecMail] = useState({});
+  const [receiver, setReceiver] = useState('');
   const email = useSelector(state=>state.auth.loginEmail);
   const sendTo = useRef();
   const subject = useRef();
-  
+    
+    //create sent entry
+    let sentRes = useFetch({
+        url:`https://mailbox-client-d3ec8-default-rtdb.firebaseio.com/${email}Sent/mail${sentMail.id}.json`, 
+        method: 'PUT',
+        body: sentMail
+    })
+
+    //create inbox entry
+    let recRes = useFetch({
+        url:`https://mailbox-client-d3ec8-default-rtdb.firebaseio.com/${receiver}Inbox/mail${recMail.id}.json`, 
+        method: 'PUT',
+        body: recMail
+    })
+    
   const editorChangeHandler = (editorState) => {
-    setEditorState(editorState)
-  }
-
+        setEditorState(editorState)
+      }
+    
   useEffect(()=>{
-    setMsgBody(draftToHtml(convertToRaw(editorState.getCurrentContent())))
-  }, [editorState,msgBody])
-
+        setMsgBody(draftToHtml(convertToRaw(editorState.getCurrentContent())))
+    }, [editorState,msgBody])
+    
   const sendMailHandler = async() => {
     try{
         if(!subject.current.value || !sendTo.current.value){
@@ -30,36 +48,24 @@ const Compose = () => {
         if(!sendTo.current.value.includes('@')){
             throw new Error('Enter a valid email address')
         }
-        let sentMail = {
+        setSentMail({
             id: new Date().getTime(),
             at: new Date(),
             to: sendTo.current.value,
             subject: subject.current.value,
             body: msgBody
-        }
-        let recMail = {
+        })
+        setRecMail({
             id: new Date().getTime(),
             at: new Date(),
             from: email,
             subject: subject.current.value,
             body: msgBody,
             status: 'unread'
-        }
-        let receiver = sentMail.to.replace('@', '').replace('.', '');
-
-        //create sent entry
-        let sentRes = await fetch(`https://mailbox-client-d3ec8-default-rtdb.firebaseio.com/${email}Sent/mail${sentMail.id}.json`,{
-            method:'PUT',
-            body:JSON.stringify(sentMail),
         })
-        
-        //create inbox entry
-        let recRes = await fetch(`https://mailbox-client-d3ec8-default-rtdb.firebaseio.com/${receiver}Inbox/mail${recMail.id}.json`,{
-            method:'PUT',
-            body:JSON.stringify(recMail),
-        })
-
-        if(!sentRes.ok && !recRes.ok){
+        setReceiver(sendTo.current.value.replace('@', '').replace('.', ''));
+    
+        if(!sentRes || !recRes){
             throw new Error('Could not send your email :(');
         }
         else{
